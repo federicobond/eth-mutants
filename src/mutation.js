@@ -23,10 +23,6 @@ Mutation.prototype.hash = function() {
 }
 
 Mutation.prototype.apply = function() {
-  const hash = this.hash()
-
-  console.log('Applying mutation ' + hash + ' to ' + this.file)
-
   const original = fs.readFileSync(this.file, 'utf8')
   const mutated = splice(
     original,

@@ -5,17 +5,27 @@ function Reporter() {
   this.killed = []
 }
 
+Reporter.prototype._formatMutant = function(mutant) {
+  return chalk.green(mutant.hash())
+}
+
 Reporter.prototype.beginMutant = function(mutant) {
+  const hash = mutant.hash()
+
+  console.log('Applying mutation ' + hash + ' to ' + mutant.file)
   console.log(mutant.diff())
+  console.log('Running tests for mutation ' + hash)
 }
 
 Reporter.prototype.mutantSurvived = function(mutant) {
-  console.log(' 👾 Mutant ' + chalk.green(mutant.hash()) + ' survived testing.')
+  this.survived.push(mutant)
+  console.log(' 👾 Mutant ' + this._formatMutant(mutant) + ' survived testing.')
 }
 
 Reporter.prototype.mutantKilled = function(mutant) {
+  this.killed.push(mutant)
   console.log(
-    ' 💪 Mutant ' + chalk.green(mutant.hash()) + ' was killed by tests.'
+    ' 💪 Mutant ' + this._formatMutant(mutant) + ' was killed by tests.'
   )
 }
 
@@ -27,7 +37,7 @@ Reporter.prototype.summary = function() {
       ' mutants killed.'
   )
   console.log(
-    'Survivors: ' + this.survived.map(m => chalk.green(m.hash())).join(', ')
+    'Survivors: ' + this.survived.map(m => this._formatMutant(m)).join(', ')
   )
 }
 

@@ -38,8 +38,6 @@ function generateAllMutations(files) {
 }
 
 function runTests(mutation) {
-  console.log('Running tests for mutation ' + mutation.hash())
-
   const proc = childProcess.spawnSync('npm', ['test'])
   return proc.status === 0
 }
