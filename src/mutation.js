@@ -51,19 +51,51 @@ Mutation.prototype.diff = function() {
   const original = fs.readFileSync(this.baseline(), 'utf8')
   const mutated = this.applyToString(original)
 
-  const diff = jsdiff.diffLines(original, mutated)
+  let diff = jsdiff.diffLines(original, mutated)
+  const lineNumber = this.getLineNumber()
+  const context = 2
 
-  let out = ''
+  diff = diff
+    .filter(part => part.added || part.removed)
+    .map(function(part) {
+      // green for additions, red for deletions
+      // grey for common parts
+      const color = part.added ? 'green' : part.removed ? 'red' : 'grey'
 
-  diff.forEach(function(part) {
-    // green for additions, red for deletions
-    // grey for common parts
-    const color = part.added ? 'green' : part.removed ? 'red' : 'grey'
+      let num
+      if (part.removed) {
+        num = lineNumber.toString().padStart(4)
+        num = chalk.gray(num + ' | ')
+      } else {
+        num = chalk.gray('     | ')
+      }
 
-    if (part.added || part.removed) out += chalk[color](part.value)
+      return num + chalk[color](part.value.replace(/\n$/, ''))
+    })
+
+  let lines = mutated.split('\n').map((line, i) => {
+    const num = (i + 1).toString().padStart(4)
+    return chalk.gray(num + ' | ' + line)
   })
 
-  return out
+  lines.splice(lineNumber - 1, 1, diff[0], diff[1])
+
+  lines = lines.slice(Math.max(0, lineNumber - context - 1), lineNumber + context + 1)
+
+  return lines.join('\n') + '\n'
+}
+
+Mutation.prototype.getLineNumber = function() {
+  const source = fs.readFileSync(this.baseline(), 'utf8')
+  const indexes = []
+
+  for (let i = 0; i < source.length; i++) {
+    if (source[i] == '\n') {
+      indexes.push(i)
+    }
+  }
+
+  return indexes.findIndex(idx => idx > this.start) + 1
 }
 
 Mutation.prototype.patch = function() {
