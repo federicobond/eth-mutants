@@ -1,4 +1,5 @@
-const childProcess = require('child_process')
+const chalk = require('chalk')
+const jsdiff = require('diff')
 const fs = require('fs')
 const sha1 = require('sha1')
 const config = require('./config')
@@ -24,14 +25,13 @@ Mutation.prototype.hash = function() {
 
 Mutation.prototype.apply = function() {
   const original = fs.readFileSync(this.file, 'utf8')
-  const mutated = splice(
-    original,
-    this.start,
-    this.end - this.start,
-    this.replace
-  )
+  const mutated = this.applyToString(original)
 
   fs.writeFileSync(this.file, mutated, 'utf8')
+}
+
+Mutation.prototype.applyToString = function(original) {
+  return splice(original, this.start, this.end - this.start, this.replace)
 }
 
 Mutation.prototype.restore = function() {
@@ -48,15 +48,29 @@ Mutation.prototype.baseline = function() {
 }
 
 Mutation.prototype.diff = function() {
-  const args = [this.baseline(), this.file]
-  const out = childProcess.spawnSync('diff', args).stdout
+  const original = fs.readFileSync(this.baseline(), 'utf8')
+  const mutated = this.applyToString(original)
 
-  // remove first line
+  const diff = jsdiff.diffLines(original, mutated)
+
+  let out = ''
+
+  diff.forEach(function(part) {
+    // green for additions, red for deletions
+    // grey for common parts
+    const color = part.added ? 'green' : part.removed ? 'red' : 'grey'
+
+    if (part.added || part.removed) out += chalk[color](part.value)
+  })
+
   return out
-    .toString('utf8')
-    .split('\n')
-    .slice(1)
-    .join('\n')
+}
+
+Mutation.prototype.patch = function() {
+  const original = fs.readFileSync(this.baseline(), 'utf8')
+  const mutated = this.applyToString(original)
+
+  return jsdiff.createPatch(this.file, original, mutated)
 }
 
 module.exports = Mutation

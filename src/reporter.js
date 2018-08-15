@@ -13,7 +13,7 @@ Reporter.prototype.beginMutant = function(mutant) {
   const hash = mutant.hash()
 
   console.log('Applying mutation ' + hash + ' to ' + mutant.file)
-  console.log(mutant.diff())
+  process.stdout.write(mutant.diff())
   console.log('Running tests for mutation ' + hash)
 }
 
