@@ -76,4 +76,20 @@ function test(argv) {
   )
 }
 
-module.exports = { test: test }
+function preflight(argv) {
+  prepare(() =>
+    glob(contractsDir + contractsGlob, (err, files) => {
+      const mutations = generateAllMutations(files)
+
+      console.log(mutations.length + ' possible mutations found.')
+      console.log('---')
+
+      for (const mutation of mutations) {
+        console.log(mutation.file + ':' + mutation.hash() + ':')
+        process.stdout.write(mutation.diff())
+      }
+    })
+  )
+}
+
+module.exports = { test: test, preflight, preflight }

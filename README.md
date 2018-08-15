@@ -11,6 +11,13 @@ npm install eth-mutants
 
 ## Usage
 
+```
+The `preflight` command will show the number of possible mutations found
+and print some compact diffs for each mutation. Use this to understand
+how long it may take to visit all mutations and please report any invalid 
+ones.
+```
+
 The `test` command will start applying mutations and running your tests to
 check if they pass. It will report the result of each mutation.
 
