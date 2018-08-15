@@ -1,0 +1,38 @@
+{
+  "name": "eth-mutants",
+  "version": "0.1.0",
+  "description": "A mutation testing tool for Solidity contracts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --single-quote --no-semi --write **/*.js"
+  },
+  "bin": {
+    "eth-mutants": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/federicobond/eth-mutants.git"
+  },
+  "keywords": [
+    "ethereum",
+    "mutation",
+    "testing",
+    "solidity"
+  ],
+  "author": "Federico Bond <federicobond@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/federicobond/eth-mutants/issues"
+  },
+  "homepage": "https://github.com/federicobond/eth-mutants#readme",
+  "dependencies": {
+    "recursive-copy": "^2.0.9",
+    "sha1": "^1.1.1",
+    "solidity-parser-antlr": "^0.3.1",
+    "yargs": "^12.0.1"
+  },
+  "devDependencies": {
+    "prettier": "1.14.2"
+  }
+}
