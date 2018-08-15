@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/federicobond/eth-mutants#readme",
   "dependencies": {
+    "chalk": "^2.4.1",
     "recursive-copy": "^2.0.9",
     "sha1": "^1.1.1",
     "solidity-parser-antlr": "^0.3.1",

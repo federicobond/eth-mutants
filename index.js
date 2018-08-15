@@ -6,10 +6,10 @@ const commands = require('./src/commands')
 yargs
 	.usage('$0 <cmd> [args]')
 	.command('test', 'run mutation tests', (yargs) => {
-		yargs.option('contracts-dir', {
-			type: 'string',
-			default: 'contracts',
-			describe: 'the directory containing contract files'
+		yargs.option('failfast', {
+			type: 'bool',
+			default: false,
+			describe: 'abort on first surviving mutant'
 		})
 	}, commands.test)
 	.help()

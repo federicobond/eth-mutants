@@ -6,6 +6,7 @@ const mkdirp = require('mkdirp')
 const parser = require('solidity-parser-antlr')
 const mutators = require('./mutators')
 const config = require('./config')
+const Reporter = require('./reporter')
 
 const baselineDir = config.baselineDir
 const contractsDir = config.contractsDir
@@ -44,6 +45,8 @@ function runTests(mutation) {
 }
 
 function test(argv) {
+  const reporter = new Reporter()
+
   prepare(() =>
     glob(contractsDir + contractsGlob, (err, files) => {
       if (err) {
@@ -55,19 +58,22 @@ function test(argv) {
 
       for (const mutation of mutations) {
         mutation.apply()
-        console.log(mutation.diff())
 
-        const hash = mutation.hash()
+        reporter.beginMutant(mutation)
+
         const result = runTests(mutation)
 
         if (result) {
-          console.log(' 👾 Mutant ' + hash + ' survived testing.')
+          reporter.mutantSurvived(mutation)
+          if (argv.failfast) process.exit(1)
         } else {
-          console.log(' 💪 Mutant ' + hash + ' was killed by tests.')
+          reporter.mutantKilled(mutation)
         }
 
         mutation.restore()
       }
+
+      reporter.summary()
     })
   )
 }

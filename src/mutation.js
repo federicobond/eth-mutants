@@ -56,13 +56,11 @@ Mutation.prototype.diff = function() {
   const out = childProcess.spawnSync('diff', args).stdout
 
   // remove first line
-  return (
-    out
-      .toString('utf8')
-      .split('\n')
-      .slice(1)
-      .join('\n')
-  )
+  return out
+    .toString('utf8')
+    .split('\n')
+    .slice(1)
+    .join('\n')
 }
 
 module.exports = Mutation
