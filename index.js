@@ -13,5 +13,11 @@ yargs
     })
   }, commands.test)
   .command('preflight', 'print preflight summary', commands.preflight)
+  .command('diff <hash>', 'show diff for a given hash', (yargs) => {
+    yargs.positional('hash', {
+      type: 'string',
+      describe: 'hash of mutant'
+    })
+  }, commands.diff)
   .help()
   .argv

@@ -37,6 +37,13 @@ function generateAllMutations(files) {
   return mutations
 }
 
+function mutationsByHash(mutations) {
+  return mutations.reduce((obj, mutation) => {
+    obj[mutation.hash()] = mutation
+    return obj
+  }, {})
+}
+
 function runTests(mutation) {
   const proc = childProcess.spawnSync('npm', ['test'])
   return proc.status === 0
@@ -92,4 +99,20 @@ function preflight(argv) {
   )
 }
 
-module.exports = { test: test, preflight, preflight }
+function diff(argv) {
+  prepare(() =>
+    glob(contractsDir + contractsGlob, (err, files) => {
+      const mutations = generateAllMutations(files)
+      const index = mutationsByHash(mutations)
+
+      if (!index[argv.hash]) {
+        console.error('Mutation ' + argv.hash + ' not found.')
+        process.exit(1)
+      }
+
+      console.log(index[argv.hash].diff())
+    })
+  )
+}
+
+module.exports = { test: test, preflight, preflight, diff: diff }
