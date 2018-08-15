@@ -30,6 +30,7 @@ Reporter.prototype.mutantKilled = function(mutant) {
 }
 
 Reporter.prototype.summary = function() {
+  console.log('---')
   console.log(
     this.survived.length +
       ' mutants survived testing, ' +
