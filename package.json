@@ -1,6 +1,6 @@
 {
   "name": "eth-mutants",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A mutation testing tool for Solidity contracts",
   "main": "index.js",
   "scripts": {
