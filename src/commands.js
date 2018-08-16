@@ -23,7 +23,8 @@ function generateAllMutations(files) {
 
   const mutator = new mutators.CompositeMutator([
     new mutators.ConditionalBoundaryMutator(),
-    new mutators.LiteralMutator()
+    new mutators.LiteralMutator(),
+    new mutators.EventEliminatorMutator()
   ])
 
   for (const file of files) {

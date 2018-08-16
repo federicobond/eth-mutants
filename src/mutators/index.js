@@ -1,4 +1,5 @@
 const ConditionalBoundaryMutator = require('./conditional-boundary')
+const EventEliminatorMutator = require('./event-eliminator')
 const LiteralMutator = require('./literal')
 
 function CompositeMutator(mutators) {
@@ -15,6 +16,7 @@ CompositeMutator.prototype.getMutations = function(file, source, visit) {
 
 module.exports = {
   ConditionalBoundaryMutator: ConditionalBoundaryMutator,
+  EventEliminatorMutator: EventEliminatorMutator,
   LiteralMutator: LiteralMutator,
   CompositeMutator: CompositeMutator
 }
